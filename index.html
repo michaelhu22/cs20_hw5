@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ttt4</title>
+    <style>
+
+        .grid {
+                display: grid;
+                grid-template-columns: repeat(3, 100px);
+                grid-template-rows:  repeat(3, 100px);
+                justify-content: center;
+        }       
+
+        .square {
+            width: 100px;
+            height: 100px;
+            border: 2px solid black;
+            font-size:4em;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+        }
+
+        #turn_sign {
+                width: 200px;
+                padding: 10px;
+                height: flex;
+                text-align: center;
+                font-size: 2em;
+                margin: auto;
+                border: 2px solid darkblue;
+        }
+        #win_condition {
+                width: 200px;
+                padding: 10px;
+                height: flex;
+                text-align: center;
+                font-size: 2em;
+                margin: auto;
+                border: 2px solid darkblue;
+        }
+
+        #start_button {
+                width: 200px;
+                padding: 10px;
+                height: flex;
+                text-align: center;
+                font-size: 2em;
+                margin: auto;
+                border: 2px solid rgb(213, 164, 50);
+        }
+
+        #start_button:hover {
+                padding: 10px;
+                
+                background-color: rgb(213, 164, 50);
+        }
+
+        .square:hover {
+            background-color: #ffcb6a;
+        }
+    </style>
+</head>
+<body>
+
+        <h1 style="text-align: center;">TIC TAC TOE</h1>
+        <div id = "turn_sign">X/O Turn</div>
+        <br>
+        <div class = "grid">
+        <script>
+                // random start turn
+                turn = Math.floor(Math.random() * 2)
+
+                if ((turn % 2) == 1) {
+                        document.getElementById("turn_sign").innerHTML = ("O Turn") 
+                }
+                else {
+                        document.getElementById("turn_sign").innerHTML = ("X Turn") 
+                }
+
+                function noHyphens(arr) {
+                        arr.forEach(element => {
+                                if (element == "-") {
+                                        return false
+                                }
+                        });
+
+                        return true
+                }
+                
+                
+                function onClick(e) {
+                        moves = ["-","-","-","-","-","-","-","-","-"]
+                        square = e.target
+                        alert(square.id)
+
+                        if ((turn % 2) == 1) {
+                                square.innerHTML = "O"
+                                document.getElementById("turn_sign").innerHTML = ("X Turn") 
+                        }
+                        else {
+                                square.innerHTML = "X"
+                                document.getElementById("turn_sign").innerHTML = ("O Turn") 
+                        }
+                        // disable clicking on it again
+                        square.onclick = null
+                        turn++;
+
+                        moves.forEach((element, index) => {
+                                square = document.getElementById("sq" + index)
+                                if (square.innerHTML == "X") {
+                                        moves[index] = "X"
+                                }
+                                else if (square.innerHTML == "O") {
+                                        moves[index] = "O"
+                                }
+                        });
+
+                        // getting win condition array
+                        winConditions = [moves[0] + moves[1] + moves[2],
+                                        moves[3] + moves[4] + moves[5],
+                                        moves[6] + moves[7] + moves[8],
+                                        moves[0] + moves[4] + moves[8],
+                                        moves[2] + moves[4] + moves[6],
+                                        moves[0] + moves[3] + moves[6],
+                                        moves[1] + moves[4] + moves[7],
+                                        moves[2] + moves[5] + moves[8]]
+
+                        winConditions.forEach((element) => {
+                                if (element == "XXX") {
+                                        // x wins
+                                        document.getElementById("win_condition").innerHTML = "X wins!"
+
+                                        // disabling all squares
+                                        for (i = 0; i < NUM_SQUARES; i++) {
+                                                id = "sq" + i;
+                                                square = document.getElementById(id)
+                                                square.onclick = null
+                                        }
+                                        return
+                                }
+                                else if (element == "OOO") {
+                                        // o wins
+                                        document.getElementById("win_condition").innerHTML = "O wins!"
+                                        for (i = 0; i < NUM_SQUARES; i++) {
+                                                id = "sq" + i;
+                                                square = document.getElementById(id)
+                                                square.onclick = null
+                                        }
+                                        return
+                                }
+                        });
+
+                        hyphens = false
+                        moves.forEach(element => {
+                                     if (element == "-") {
+                                        hyphens = true
+                                     }   
+                        });
+
+                        if (hyphens == false) {
+                                document.getElementById("win_condition").innerHTML = "Tie!"
+                                for (i = 0; i < NUM_SQUARES; i++) {
+                                        id = "sq" + i;
+                                        square = document.getElementById(id)
+                                        square.onclick = null
+                                }
+                                return
+                        }
+                }
+
+                
+
+                const NUM_SQUARES = 9;
+                for (i=0; i<NUM_SQUARES; i++) {
+                        id = "sq"+i;
+                        document.write( "<div class='square' id='" + id + "'></div>" ); 
+                        document.getElementById("sq" + i).onclick = onClick;
+                }
+
+                
+        </script>
+        </div>
+
+        <br>
+
+        <div id = "win_condition">
+        </div>
+        <br>
+        <script>
+                function restartGame() {
+                        for (i = 0; i < NUM_SQUARES; i++) {
+                                id = "sq" + i;
+                                square = document.getElementById(id)
+                                square.onclick = onClick
+                                square.innerHTML = ""
+                        }
+                }
+
+                turn = Math.floor(Math.random() * 2)
+
+                document.write("<div  id=start_button>Restart Game</div>" )
+                document.getElementById("start_button").onclick = restartGame
+        </script>
+
+</body>
+
+
+</html>
